@@ -294,7 +294,7 @@ public class Main {
 				
 			
 				res.status(200);
-			//Comprovacion para ver si el autor y sus cuadors an sido borrado
+			//Comprobacion para ver si el autor y sus cuadors an sido borrado
 							
 				for(int i=0;i<ListaCuadros.size();i++) 
 				{
