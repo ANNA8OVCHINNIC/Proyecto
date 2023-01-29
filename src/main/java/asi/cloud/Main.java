@@ -330,7 +330,7 @@ public class Main {
 				Cuadros.deleteCuadro(indexaborrar);
 							
 				
-				////Comprovacion para ver si el cuadro a sido borrado
+				//Comprovacion para ver si el cuadro a sido borrado
 				for(int i=0;i<ListaCuadros.size();i++) 
 				{
 					
