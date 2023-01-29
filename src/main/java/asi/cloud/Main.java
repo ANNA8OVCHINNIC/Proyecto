@@ -354,7 +354,7 @@ public class Main {
 		String lista_de_cuadros ="";
 		List<Cuadros> deletedcuadros;
 		deletedcuadros = new ArrayList<Cuadros>();
-		
+		boolean artistaexiste = false;
 		if(autor == null) 
 		{
 			res.status(404);
@@ -362,44 +362,53 @@ public class Main {
 		}
 		else 
 		{
-			if(Artistas.indexOf(autor)!=-1) 
-			{
-			Artistas.remove(Artistas.indexOf(autor));
-				for (int i=0;i<Main.ListaCuadros.size();i++) 
+		for(int j=0;j<Artistas.size();j++)
+		{
+			
+				if(Artistas.get(j).GetName().equals(autor))
 				{
-					if(Main.ListaCuadros.get(i).Get_Author().equals(autor)) 
+					artistaexiste = true;
+					Artistas.remove(Artistas.get(j));
+						
+					for (int i=0;i<Main.ListaCuadros.size();i++) 
 					{
-						
-						deletedcuadros.add(ListaCuadros.get(i));
-						
-						
-						
+						if(Main.ListaCuadros.get(i).Get_Author().equals(autor)) 
+						{
+							
+							deletedcuadros.add(ListaCuadros.get(i));
+							
+						}	
+							
 					}
 				}
-				for(int j=0;j<deletedcuadros.size();j++) 
+				for(int z=0;z<deletedcuadros.size();z++) 
 				{
 					
-					Cuadros.deleteCuadro(deletedcuadros.get(j));
+					Cuadros.deleteCuadro(deletedcuadros.get(z));
 				}
 				
 			
-				res.status(200);
+			
+
+			}
+		if(artistaexiste) 
+		{
 			//Comprobacion para ver si el autor y sus cuadors an sido borrado
-							
-				for(int i=0;i<ListaCuadros.size();i++) 
-				{
-							
-					lista_de_cuadros = lista_de_cuadros+ListaCuadros.get(i).Get_Titlte()+" "+ ListaCuadros.get(i).Get_Author()+"\n";
-				}
-						
-				res.status(200);
-				return lista_de_cuadros;
-			}
-			else 
+			
+			for(int i=0;i<ListaCuadros.size();i++) 
 			{
-				res.status(404);
-				return "El autor no está en la base de datos";
+						
+				lista_de_cuadros = lista_de_cuadros+ListaCuadros.get(i).Get_Titlte()+" "+ ListaCuadros.get(i).Get_Author()+"\n";
 			}
+					
+			res.status(200);
+			return lista_de_cuadros;
+		}
+		else 
+		{
+			res.status(404);
+			return "El autor no está en la base de datos";
+		}
 		}
 	}
 	
