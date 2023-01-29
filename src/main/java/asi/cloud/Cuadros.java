@@ -20,6 +20,24 @@ package asi.cloud;
 					Cuadros cuadroacrear = new Cuadros(tit,aut,numcuadro);
 					Main.ListaCuadros.add(cuadroacrear);
 					numcuadro++;
+					boolean artitasexiste = false;
+					for(int i=0;i<Main.Artistas.size();i++) 
+					{
+						if(cuadroacrear.Autor.equals(Main.Artistas.get(i).GetName())) 
+						{
+							Main.Artistas.get(i).AddCuadro(cuadroacrear);
+							artitasexiste = true;
+						}
+				
+					}
+					if(artitasexiste)
+					{
+						
+					}
+					else 
+					{
+						Autores.CreateAutor(cuadroacrear.Autor);
+					}
 					
 				}
 				public String Get_Titlte() 

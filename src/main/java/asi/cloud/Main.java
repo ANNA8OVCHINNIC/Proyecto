@@ -2,8 +2,8 @@ package asi.cloud;
 
 import static spark.Spark.*;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 
 import spark.Request;
 import spark.Response;
@@ -15,14 +15,35 @@ public class Main {
 	static List<Usario> Usuarios;
 	
 	
-	static List<String> Autores;
+	static List<Autores> Artistas;
 	static List<Cuadros> ListaCuadros;
+	
+    static int Hora_apertura_laboral= 9;
+    static int minutos_apertura_laboral=00;
+    
+    static int Hora_cierre_mediodia_laboral=13;
+    static int minutos_cierre_mediodia_laboral =15;
+    
+    static int Hora_apertura_tarde_laboral=16;
+    static int minutos_apertura_tarde_laboral=00;
+    
+    static int Hora_cierre_laboral=20;
+    static int minutos_cierre_laboral=30;
+    
+    static int Hora_apertura_festivo=8;
+    static int minutos_apertura_festivo=00;
+    
+    static int Hora_cierre_festivo=13;
+    static int minutos_cierre_festivo=45;
+    
+	
 	
 	public static void main(String[] args) {
 		Usuarios = new ArrayList<Usario>();
 		
-		Autores = new ArrayList<String>();
+		Artistas = new ArrayList<Autores>();
 		ListaCuadros = new ArrayList<Cuadros>();
+		
 		
 		//Usarios mock creados para comprobar que funciona el servicio Login.
 		Usario.CreateUser("Anna", "Pass1");
@@ -30,20 +51,20 @@ public class Main {
 		Usario.CreateUser("Nadia", "Pass3");
 		Usario.CreateUser("Jaime", "Pass4");
 		
-		
+		//Prueba
 		
 		//Autores mock creados para comprobar que funcionan los servicios relacionados con el autor.
-		Autores.add("Picasso");
-		Autores.add("Monet");
-		Autores.add("Goya");
-		Autores.add("Kandinski");
-		Autores.add("Van Gogh");
-		Autores.add("Dali");
+		Autores.CreateAutor("Picasso");
+		Autores.CreateAutor("Monet");
+		Autores.CreateAutor("Goya");
+		Autores.CreateAutor("Kandinski");
+		Autores.CreateAutor("Van Gogh");
+		Autores.CreateAutor("Dali");
 		
 		//Cuadros mock creados para comprobar que funcionan los servicios relacionados con los cuadros.
 		Cuadros.createCuadro("Composición VII", "Kandinski");
 		Cuadros.createCuadro("Composición 8", "Kandinski");
-		Cuadros.createCuadro("Composición X", "Kandisnki");
+		Cuadros.createCuadro("Composición X", "Kandinski");
 		Cuadros.createCuadro("Guernica", "Picasso");
 		Cuadros.createCuadro("La mujer que llora", "Picasso");
 		Cuadros.createCuadro("Autorretrato", "Picasso");
@@ -70,16 +91,65 @@ public class Main {
 		port(Integer.parseInt(port));
 
 		get("/", (req, res) -> "Bienvenido al museo" + "\n" + "Introduzca sus datos por favor");
-		get("/autores", (req,res)-> listaautores(req,res));
-		get("/cuadros",(req,res)-> listacuadros(req,res));
-		get("/horario",(req,res)-> "El horario del museo es el siguietne:"+ "\n"+"De L-V: 9.00-14.00 y 17.00-21.30"+"\n"+"S:9.00-14.00"+"\n"+"D:Cerrado");			
 		post("/login",(req,res) -> loginservice(req,res));
-		post("/addcuadro",(req,res) -> anadecuadro(req,res));
-		post("/addautor",(req,res) -> anadeautor(req,res));
-		post("/deletecuadro", (req,res) -> borracuadro(req,res));
-		post("/deleteautor", (req,res) -> borrautor(req,res));
-	}
+		
+		
+		get("/autores", (req,res)-> listaautores(req,res));
+		post("/autores/add",(req,res) -> anadeautor(req,res));
+		post("/autores/delete", (req,res) -> borrautor(req,res));
+		
+		
+		get("/cuadros",(req,res)-> listacuadros(req,res));
+		post("/cuadros/add",(req,res) -> anadecuadro(req,res));
+		post("/cuadros/delete", (req,res) -> borracuadro(req,res));
 	
+		
+		get("/horario",(req,res)-> "El horario del museo es el siguietne:"+ "\n"+"De L-V: " + Hora_apertura_laboral+":"+minutos_apertura_laboral+ " a " +  Hora_cierre_mediodia_laboral+":"+
+				minutos_cierre_mediodia_laboral+" y "+Hora_apertura_tarde_laboral+":"+minutos_apertura_tarde_laboral+" a "+Hora_cierre_laboral+":"+minutos_cierre_laboral+"\n"
+				+ "Festivos: "+Hora_apertura_festivo+":"+minutos_apertura_festivo+" a "+Hora_cierre_festivo+":"+minutos_cierre_festivo);			
+		post("horario/cambiar",(req,res)-> cambiarhorario(req,res));
+		
+		
+		
+		
+	}
+	public static String cambiarhorario(Request req, Response res) 
+	{
+		int hal=Integer.parseInt(req.queryParams("hal"));
+		int mal=Integer.parseInt(req.queryParams("mal"));
+		int hcml=Integer.parseInt(req.queryParams("hcml"));
+		int mcml=Integer.parseInt(req.queryParams("mcml"));
+		int hatl=Integer.parseInt(req.queryParams("hatl"));
+		int matl=Integer.parseInt(req.queryParams("matl"));
+		int hcl=Integer.parseInt(req.queryParams("hcl"));
+		int mcl=Integer.parseInt(req.queryParams("mcl"));
+		int haf=Integer.parseInt(req.queryParams("haf"));
+		int maf=Integer.parseInt(req.queryParams("maf"));
+		int hcf=Integer.parseInt(req.queryParams("hcf"));
+		int mcf=Integer.parseInt(req.queryParams("mcf"));
+		
+		Hora_apertura_laboral= hal;
+	    minutos_apertura_laboral=mal;
+	    
+	    Hora_cierre_mediodia_laboral=hcml;
+	    minutos_cierre_mediodia_laboral =mcml;
+	    
+	    Hora_apertura_tarde_laboral=hatl;
+	    minutos_apertura_tarde_laboral=matl;
+	    
+	    Hora_cierre_laboral=hcl;
+	    minutos_cierre_laboral=mcl;
+	    
+	    Hora_apertura_festivo=haf;
+	    minutos_apertura_festivo=maf;
+	    
+	    Hora_cierre_festivo=hcf;
+	   	minutos_cierre_festivo=mcf;
+	   	
+	   	return "El horario del museo es el siguietne:"+ "\n"+"De L-V: " + Hora_apertura_laboral+":"+minutos_apertura_laboral+ " a " +  Hora_cierre_mediodia_laboral+":"+
+				minutos_cierre_mediodia_laboral+" y "+Hora_apertura_tarde_laboral+":"+minutos_apertura_tarde_laboral+" a "+Hora_cierre_laboral+":"+minutos_cierre_laboral+"\n"
+				+ "Festivos: "+Hora_apertura_festivo+":"+minutos_apertura_festivo+" a "+Hora_cierre_festivo+":"+minutos_cierre_festivo;
+	}
 	public static String loginservice(Request req, Response res) 
 	{
 		
@@ -123,10 +193,10 @@ public class Main {
 		String lista_de_autores="";
 		
 		
-		for(int i=0;i<Autores.size();i++) 
+		for(int i=0;i<Artistas.size();i++) 
 		{
 			
-			lista_de_autores = lista_de_autores+Autores.get(i)+"\n";
+			lista_de_autores = lista_de_autores+Artistas.get(i).GetName()+"\n";
 		}
 		
 		res.status(200);
@@ -151,7 +221,7 @@ public class Main {
 	{
 		String cuadro = req.queryParams("cuadro");
 		String autor = req.queryParams("autor");
-		
+		int index = -1;
 		if(cuadro == null || autor == null) 
 		{
 			res.status(404);
@@ -159,10 +229,19 @@ public class Main {
 		}
 		else 
 		{
-		Cuadros.createCuadro(cuadro, autor);
-		res.status(200);
-		
-		//Comprovacion para ver si el cuadro a sido añadido
+			Cuadros.createCuadro(cuadro, autor);
+			res.status(200);
+			for (int i=0;i<ListaCuadros.size();i++) 
+			{
+				if(cuadro.equals(ListaCuadros.get(i).Get_Titlte()) && autor.equals(ListaCuadros.get(i).Get_Author())) 
+				{
+					index = ListaCuadros.get(i).Get_index();
+				}
+			}
+			return "El índice del nuevo cuadro es "+ Integer.toString(index);
+		}
+			
+		/*Comprovacion para ver si el cuadro a sido añadido
 		String lista_de_cuadros="";
 		
 		
@@ -172,14 +251,17 @@ public class Main {
 			
 		}
 		
-		res.status(200);
-		return lista_de_cuadros;
-		}
+		
+		return lista_de_cuadros;*/
+		
+		
+		
 	}
 	public static String anadeautor(Request req, Response res) 
 	{
 		
 		String autor = req.queryParams("autor");
+		int index = -1;
 		if(autor==null)
 		{
 			res.status(404);
@@ -187,22 +269,30 @@ public class Main {
 		}
 		else
 		{
-		Autores.add(autor);
+		Autores.CreateAutor(autor);
 		res.status(200);
-		
-		//Comprovacion para ver si el autor a sido añadido
+			for (int i=0;i<Artistas.size();i++) 
+			{
+				if(autor.equals(Artistas.get(i).GetName())) 
+				{
+					index = Artistas.get(i).Get_Index();
+				}
+			}
+		return "El índice del nuevo artista es "+Integer.toString(index);
+		}
+		/*Comprovacion para ver si el autor a sido añadido
 		String lista_de_autores="";
 		
 		
-		for(int i=0;i<Autores.size();i++) 
+		for(int i=0;i<Artistas.size();i++) 
 		{
 			
-			lista_de_autores = lista_de_autores+Autores.get(i)+"\n";
+			lista_de_autores = lista_de_autores+Artistas.get(i).GetName()+"\n";
 		}
 		
 		res.status(200);
 		return lista_de_autores;
-		}
+		}*/
 	}
 	public static String borracuadro(Request req, Response res) 
 	{
@@ -272,9 +362,9 @@ public class Main {
 		}
 		else 
 		{
-			if(Main.Autores.indexOf(autor)!=-1) 
+			if(Artistas.indexOf(autor)!=-1) 
 			{
-			Main.Autores.remove(Main.Autores.indexOf(autor));
+			Artistas.remove(Artistas.indexOf(autor));
 				for (int i=0;i<Main.ListaCuadros.size();i++) 
 				{
 					if(Main.ListaCuadros.get(i).Get_Author().equals(autor)) 
